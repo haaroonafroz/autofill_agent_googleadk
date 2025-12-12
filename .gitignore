@@ -173,3 +173,4 @@ predictions/
 *.pdf
 *.pkl
 *.npy
+*output/*
