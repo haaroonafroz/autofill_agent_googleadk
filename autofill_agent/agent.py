@@ -25,7 +25,7 @@ class AutofillAgent:
             raise ValueError("OPENAI_API_KEY not found in environment variables.")
 
         self.llm = ChatOpenAI(
-            model="gpt-4-turbo-preview",  # Use a capable model
+            model="gpt-4o-mini",
             temperature=0,
             api_key=self.openai_api_key
         )

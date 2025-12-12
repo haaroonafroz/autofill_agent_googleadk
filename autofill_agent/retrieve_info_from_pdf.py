@@ -11,7 +11,7 @@ from langchain.schema import Document
 from qdrant_client import QdrantClient
 
 # Configuration Defaults
-DEFAULT_COLLECTION_NAME = "cv_data"
+DEFAULT_COLLECTION_NAME = "personal-collection"
 
 class RAGManager:
     """Manages PDF chunk embedding, storage, and retrieval using Qdrant and OpenAI embeddings."""
@@ -32,7 +32,7 @@ class RAGManager:
         if not all([self.qdrant_url, self.qdrant_api_key, self.openai_api_key]):
             print("Warning: Missing QDRANT_URL, QDRANT_API_KEY, or OPENAI_API_KEY in environment.")
 
-        self.embedding_model = None
+        self.embedding_model = 'text-embedding-3-small'
         self.vector_store = None
         self.client = None
 
@@ -42,7 +42,7 @@ class RAGManager:
         """Initializes the embedding model and Qdrant client."""
         try:
             print("Initializing OpenAI Embeddings...")
-            self.embedding_model = OpenAIEmbeddings(api_key=self.openai_api_key)
+            self.embedding_model = OpenAIEmbeddings(api_key=self.openai_api_key, model=self.embedding_model)
             
             print(f"Connecting to Qdrant at {self.qdrant_url}...")
             self.client = QdrantClient(
