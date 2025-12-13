@@ -1,82 +1,79 @@
-"""
-Tool for loading a PDF file and splitting it into text chunks.
-"""
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
+from typing import List
+from langchain.schema import Document
+from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 
-# Consider making chunk_size and chunk_overlap configurable
-DEFAULT_CHUNK_SIZE = 1000
-DEFAULT_CHUNK_OVERLAP = 150
+# Import Docling
+try:
+    from docling.document_converter import DocumentConverter
+except ImportError:
+    print("Warning: Docling not installed. Install it via 'pip install docling'")
+    DocumentConverter = None
 
-def load_and_split_pdf(pdf_file_path: str, 
-                       chunk_size: int = DEFAULT_CHUNK_SIZE, 
-                       chunk_overlap: int = DEFAULT_CHUNK_OVERLAP):
+def load_and_split_pdf(pdf_file_path: str) -> List[Document]:
     """
-    Loads a PDF using PyPDFLoader and splits it using RecursiveCharacterTextSplitter.
-
-    Args:
-        pdf_file_path: Path to the PDF file.
-        chunk_size: Maximum size of chunks.
-        chunk_overlap: Overlap between consecutive chunks.
-
-    Returns:
-        A list of LangChain Document objects (chunks).
+    Loads a PDF using Docling (Vision/Layout aware) to convert it to Markdown,
+    then splits it by semantic headers (e.g., # Experience, # Education).
     """
     if not os.path.exists(pdf_file_path):
         raise FileNotFoundError(f"PDF file not found at: {pdf_file_path}")
 
+    if DocumentConverter is None:
+        raise ImportError("Docling is required for this function. Please install it.")
+
+    print(f"Converting PDF to Markdown using Docling: {pdf_file_path}")
+    
     try:
-        # 1. Load the PDF
-        loader = PyPDFLoader(pdf_file_path)
-        # Loads pages as separate documents by default
-        pages = loader.load() 
+        # 1. Convert PDF to Markdown using Docling
+        # This handles multi-column layouts and table parsing automatically.
+        converter = DocumentConverter()
+        result = converter.convert(pdf_file_path)
+        markdown_text = result.document.export_to_markdown()
         
-        # Combine page texts if you want to split across pages, 
-        # or process page by page if structure is page-dependent.
-        # For CVs, combining might be better initially.
-        full_text = "\n".join([page.page_content for page in pages])
+        print("PDF converted to Markdown. Splitting by headers...")
+
+        # 2. Split by Headers (Semantic Chunking)
+        # This ensures "Experience" content stays with the "Experience" header.
+        headers_to_split_on = [
+            ("#", "Header 1"),
+            ("##", "Header 2"),
+            ("###", "Header 3"),
+        ]
         
-        # Re-create a single document source for splitting (optional but cleaner)
-        # You might want to retain original page metadata if processing page-by-page
-        # For now, we treat the whole PDF as one source for splitting.
-        
-        # 2. Initialize the splitter
+        markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
+        header_splits = markdown_splitter.split_text(markdown_text)
+
+        # 3. Recursive Split (Safety Net)
+        # If a section (like a very long job description) is still too big, 
+        # split it further while keeping the header metadata.
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            # Common separators, add more if needed for specific CV formats
-            separators=["\n\n", "\n", ". ", " ", ""] 
+            chunk_size=800,
+            chunk_overlap=100
         )
-
-        # 3. Split the text
-        chunks = text_splitter.create_documents([full_text])
         
-        # Optional: Add metadata back to chunks if needed (e.g., source file name)
-        for i, chunk in enumerate(chunks):
+        final_chunks = text_splitter.split_documents(header_splits)
+        
+        # Add source metadata
+        for chunk in final_chunks:
             chunk.metadata["source"] = pdf_file_path
-            chunk.metadata["chunk_index"] = i
-            # Add other metadata if useful (e.g., derive from page content if not combined)
-
-        print(f"Successfully loaded and split '{pdf_file_path}' into {len(chunks)} chunks.")
-        return chunks
+            # The 'Header 1', 'Header 2' etc. metadata is already added by MarkdownHeaderTextSplitter
+            
+        print(f"Successfully processed PDF into {len(final_chunks)} structured chunks.")
+        return final_chunks
 
     except Exception as e:
-        print(f"Error processing PDF {pdf_file_path}: {e}")
-        # Depending on agent design, might want to raise e or return None/[]
-        raise 
+        print(f"Error processing PDF with Docling: {e}")
+        raise
 
-# Example usage (for testing)
 if __name__ == '__main__':
-    # Create a dummy PDF or replace with a real path for testing
-    dummy_pdf_path = "example_cv.pdf" 
-    # Ensure you have a PDF at this path if running directly
-    if os.path.exists(dummy_pdf_path):
+    # Test block
+    test_pdf = "example_cv.pdf"
+    if os.path.exists(test_pdf):
         try:
-            document_chunks = load_and_split_pdf(dummy_pdf_path)
-            print(f"First chunk:\n{document_chunks[0].page_content}\n...")
-            print(f"Metadata of first chunk: {document_chunks[0].metadata}")
+            chunks = load_and_split_pdf(test_pdf)
+            for i, chunk in enumerate(chunks[:3]):
+                print(f"\n--- Chunk {i} ---")
+                print(f"Metadata: {chunk.metadata}")
+                print(f"Content: {chunk.page_content[:200]}...")
         except Exception as e:
-            print(f"Testing failed: {e}")
-    else:
-        print(f"Test PDF '{dummy_pdf_path}' not found. Skipping example usage.") 
+            print(f"Test failed: {e}")

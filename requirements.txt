@@ -13,6 +13,9 @@ openai>=1.0.0
 qdrant-client>=1.15.0
 tiktoken>=0.5.0
 
+# PDF Processing (Layout Aware)
+docling>=1.0.0
+
 # Web interaction
 playwright>=1.40.0
 beautifulsoup4>=4.12.0
