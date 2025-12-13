@@ -25,7 +25,6 @@ def load_and_split_pdf(pdf_file_path: str) -> List[Document]:
     
     try:
         # 1. Convert PDF to Markdown using Docling
-        # This handles multi-column layouts and table parsing automatically.
         converter = DocumentConverter()
         result = converter.convert(pdf_file_path)
         markdown_text = result.document.export_to_markdown()
@@ -33,19 +32,17 @@ def load_and_split_pdf(pdf_file_path: str) -> List[Document]:
         print("PDF converted to Markdown. Splitting by headers...")
 
         # 2. Split by Headers (Semantic Chunking)
-        # This ensures "Experience" content stays with the "Experience" header.
+        # CHANGED: Use underscores instead of spaces for metadata keys to match Qdrant schema
         headers_to_split_on = [
-            ("#", "Header 1"),
-            ("##", "Header 2"),
-            ("###", "Header 3"),
+            ("#", "Header_1"),
+            ("##", "Header_2"),
+            ("###", "Header_3"),
         ]
         
         markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
         header_splits = markdown_splitter.split_text(markdown_text)
 
         # 3. Recursive Split (Safety Net)
-        # If a section (like a very long job description) is still too big, 
-        # split it further while keeping the header metadata.
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=800,
             chunk_overlap=100
@@ -56,7 +53,6 @@ def load_and_split_pdf(pdf_file_path: str) -> List[Document]:
         # Add source metadata
         for chunk in final_chunks:
             chunk.metadata["source"] = pdf_file_path
-            # The 'Header 1', 'Header 2' etc. metadata is already added by MarkdownHeaderTextSplitter
             
         print(f"Successfully processed PDF into {len(final_chunks)} structured chunks.")
         return final_chunks

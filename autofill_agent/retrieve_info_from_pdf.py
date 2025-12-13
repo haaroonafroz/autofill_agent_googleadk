@@ -11,7 +11,7 @@ from langchain.schema import Document
 from qdrant_client import QdrantClient, models
 
 # Configuration Defaults
-DEFAULT_COLLECTION_NAME = "cv_data"
+DEFAULT_COLLECTION_NAME = os.getenv("QDRANT_COLLECTION_NAME", "personal-collection")
 
 class RAGManager:
     """Manages PDF chunk embedding, storage, and retrieval using Qdrant and OpenAI embeddings."""
@@ -63,30 +63,30 @@ class RAGManager:
                 field_name="user_id",
                 field_schema=models.PayloadSchemaType.KEYWORD,
             )
+            self.client.create_payload_index(
+                collection_name=self.collection_name,
+                field_name="metadata.user_id", # LangChain often nests it
+                field_schema=models.PayloadSchemaType.KEYWORD,
+            )
             # New indexes for structured search (Markdown Headers)
             self.client.create_payload_index(
                 collection_name=self.collection_name,
-                field_name="metadata.Header 1", # Note: LangChain nests metadata
+                field_name="metadata.Header_1", # Note: LangChain nests metadata
                 field_schema=models.PayloadSchemaType.KEYWORD,
             )
             self.client.create_payload_index(
                 collection_name=self.collection_name,
-                field_name="metadata.Header 2",
+                field_name="metadata.Header_2",
                 field_schema=models.PayloadSchemaType.KEYWORD,
             )
             print("Payload indexes created/updated.")
         except Exception as e:
-            # Indexes might already exist, which is fine
+            # Indexes might already exist, or 400 if strictly valid format required
             print(f"Index creation note: {e}")
 
     def initialize_vector_store(self, chunks: List[Document], user_id: str, force_recreate: bool = False):
         """
         Initializes the Qdrant vector store with user-specific chunks.
-        
-        Args:
-            chunks: A list of LangChain Document objects.
-            user_id: The unique hash ID of the user.
-            force_recreate: If True, recreates the collection.
         """
         if not chunks:
             print("No chunks provided to initialize vector store.")
@@ -97,20 +97,17 @@ class RAGManager:
             chunk.metadata["user_id"] = user_id
 
         try:
-            # Ensure indexes exist
-            # Note: If force_recreate is True, we might wipe indexes if we delete collection, so recreate after.
-            if force_recreate:
-                print(f"Recreating collection '{self.collection_name}'...")
-                # self.client.recreate_collection(...) # LangChain wrapper can handle this via force_recreate=True
-            
             print(f"Indexing {len(chunks)} chunks into Qdrant for user {user_id}...")
+            
+            # Use LangChain wrapper for convenience in ADDING documents (it handles embedding + upsert well)
             self.vector_store = Qdrant.from_documents(
                 documents=chunks,
                 embedding=self.embedding_model,
                 url=self.qdrant_url,
                 api_key=self.qdrant_api_key,
                 collection_name=self.collection_name,
-                force_recreate=force_recreate 
+                force_recreate=force_recreate,
+                vector_name="user-information" # Matches collection config
             )
             
             # Ensure indexes are set up after collection creation
@@ -124,21 +121,16 @@ class RAGManager:
 
     def query_vector_store(self, query: str, user_id: str, k: int = 3) -> List[Document]:
         """
-        Queries the vector store for relevant documents, filtered by user_id.
+        Queries the vector store using raw Qdrant Client to avoid LangChain wrapper issues.
         """
-        if self.vector_store is None:
-            # Attempt to connect to existing store
-            try:
-                self.vector_store = Qdrant(
-                    client=self.client,
-                    collection_name=self.collection_name,
-                    embeddings=self.embedding_model
-                )
-            except Exception as e:
-                print(f"Error connecting to existing vector store: {e}")
-                return []
+        # 1. Embed query
+        try:
+            query_vector = self.embedding_model.embed_query(query)
+        except Exception as e:
+            print(f"Error embedding query: {e}")
+            return []
 
-        # Define the filter to ISOLATE this user's data
+        # 2. Define Filter
         user_filter = models.Filter(
             must=[
                 models.FieldCondition(
@@ -149,14 +141,28 @@ class RAGManager:
         )
 
         print(f"Querying Qdrant for user {user_id}: '{query}'")
+        
         try:
-            results = self.vector_store.similarity_search(
-                query, 
-                k=k,
-                filter=user_filter
+            # 3. Execute Search via Client directly
+            # This bypasses the AttributeError: 'QdrantClient' object has no attribute 'search'
+            # which happens inside the LangChain wrapper due to version mismatch.
+            search_results = self.client.search(
+                collection_name=self.collection_name,
+                query_vector=("user-information", query_vector), # Named vector tuple
+                query_filter=user_filter,
+                limit=k
             )
-            print(f"Found {len(results)} results.")
-            return results
+            
+            # 4. Map back to Documents
+            docs = []
+            for point in search_results:
+                content = point.payload.get("page_content", "")
+                meta = point.payload.get("metadata", {})
+                docs.append(Document(page_content=content, metadata=meta))
+                
+            print(f"Found {len(docs)} results.")
+            return docs
+
         except Exception as e:
             print(f"Error during query: {e}")
             return []

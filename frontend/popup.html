@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Autofill Agent</h2>
+    
+    <div class="section">
+      <h3>1. Setup</h3>
+      <input type="text" id="userId" placeholder="Enter your User ID" />
+      <input type="file" id="cvFile" accept=".pdf" />
+      <button id="uploadBtn">Upload CV</button>
+      <div id="uploadStatus" class="status"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <h3>2. Action</h3>
+      <button id="startBtn" disabled>Start Autofill</button>
+      <div id="agentStatus" class="status"></div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

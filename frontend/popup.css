@@ -1,0 +1,9 @@
+body { width: 300px; font-family: sans-serif; padding: 10px; }
+h2 { text-align: center; color: #333; }
+.section { margin-bottom: 15px; }
+input { width: 100%; margin-bottom: 8px; padding: 5px; box-sizing: border-box; }
+button { width: 100%; padding: 8px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+button:disabled { background-color: #ccc; }
+button:hover:not(:disabled) { background-color: #0056b3; }
+.status { font-size: 12px; margin-top: 5px; text-align: center; }
+.divider { border-bottom: 1px solid #eee; margin: 10px 0; }

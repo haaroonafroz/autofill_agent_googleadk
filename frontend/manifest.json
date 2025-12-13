@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Autofill Agent",
+  "version": "1.0",
+  "description": "AI Agent to autofill job applications using your CV.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Autofill Agent"
+  },
+  "host_permissions": [
+    "http://localhost:8000/*"
+  ]
+}

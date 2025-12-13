@@ -2,7 +2,7 @@
     "status": "green",
     "optimizer_status": "ok",
     "indexed_vectors_count": 0,
-    "points_count": 0,
+    "points_count": 208,
     "segments_count": 2,
     "config": {
         "params": {
@@ -63,37 +63,33 @@
         }
     },
     "payload_schema": {
-        "user_id": {
+        "document-id": {
+            "data_type": "uuid",
+            "params": {
+                "type": "uuid"
+            },
+            "points": 0
+        },
+        "user-id": {
             "data_type": "keyword",
             "params": {
                 "type": "keyword",
                 "is_tenant": true,
                 "on_disk": false
-            }
+            },
+            "points": 0
         },
-        "document_id": {
+        "user_id": {
             "data_type": "keyword",
-            "params": {
-                "type": "keyword"
-            }
+            "points": 0
         },
-        "header_1": {
+        "metadata.Header_1": {
             "data_type": "keyword",
-            "params": {
-                "type": "keyword"
-            }
+            "points": 0
         },
-        "header_2": {
+        "metadata.Header_2": {
             "data_type": "keyword",
-            "params": {
-                "type": "keyword"
-            }
-        },
-        "page_number": {
-             "data_type": "integer",
-             "params": {
-                 "type": "integer"
-             }
+            "points": 16
         }
     }
 }
