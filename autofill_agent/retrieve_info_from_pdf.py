@@ -146,20 +146,29 @@ class RAGManager:
             # 3. Execute Search via Client directly
             # This bypasses the AttributeError: 'QdrantClient' object has no attribute 'search'
             # which happens inside the LangChain wrapper due to version mismatch.
-            search_results = self.client.search(
-                collection_name=self.collection_name,
-                query_vector=("user-information", query_vector), # Named vector tuple
-                query_filter=user_filter,
-                limit=k
+            response = self.client.query_points(
+            collection_name=self.collection_name,
+            query=query_vector,
+            using="user-information",  # optional, only if using named vector
+            query_filter=user_filter,
+            with_payload=True,
+            with_vectors=True,
+            limit=k
             )
-            
-            # 4. Map back to Documents
+
+            # 4. Extract hits
+            points = getattr(response, "points", None)
+            if points is None:
+                # Some versions also use .result
+                points = getattr(response, "result", [])
+
             docs = []
-            for point in search_results:
-                content = point.payload.get("page_content", "")
-                meta = point.payload.get("metadata", {})
+            for point in points:
+                payload = getattr(point, "payload", {}) or {}
+                content = payload.get("page_content", "")
+                meta = payload.get("metadata", {})
                 docs.append(Document(page_content=content, metadata=meta))
-                
+
             print(f"Found {len(docs)} results.")
             return docs
 

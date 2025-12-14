@@ -2,86 +2,82 @@
 
 An intelligent form-filling agent that uses your CV to automatically fill job application forms. It leverages **Vision-based PDF processing** (Docling) for layout understanding, **OpenAI** for reasoning, and **Qdrant** for secure, multi-tenant vector storage.
 
+The system uses an **Extension-Native Architecture** where the browser extension handles page interaction, and the Python backend handles intelligence.
+
 ## Architecture
 
-*   **Backend Agent**: Python-based service using LangChain, OpenAI, and Playwright.
-*   **PDF Processing**: Uses [Docling](https://github.com/DS4SD/docling) to convert PDFs into structured Markdown, preserving headers and multi-column layouts (crucial for Resumes).
-*   **Vector Database**: Qdrant (Cloud or Local) stores chunks with strict tenant separation (`user_id`).
-*   **Web Interaction**: Playwright for analyzing and filling form fields.
-*   **API**: FastAPI server to expose the agent's capabilities.
+1.  **Frontend (Browser Extension)**:
+    *   Injects into the active tab (LinkedIn, Workday, etc.).
+    *   Captures the HTML form structure.
+    *   Executes fill/click actions commanded by the backend.
+    *   Manages User ID persistence.
+
+2.  **Backend (FastAPI + Python)**:
+    *   **PDF Processing**: Uses [Docling](https://github.com/DS4SD/docling) to convert CVs into structured Markdown.
+    *   **RAG Engine**: Stores chunks in **Qdrant** with strict user isolation (`user_id`).
+    *   **Reasoning Agent**: Analyzes HTML fields + CV data to decide *what* to fill (e.g., "Field #fname needs 'John'").
 
 ## Prerequisites
 
 *   Python 3.10+ (Required for Docling)
 *   [Qdrant](https://qdrant.tech/) Instance (Cloud or Local)
 *   OpenAI API Key
+*   Google Chrome / Edge / Brave
 
 ## Installation
 
-1.  **Clone the repository**
-2.  **Install Dependencies**
+### 1. Backend Setup
+1.  **Clone the repository**.
+2.  **Install Dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
-    *Note: This will install `docling`, which may download PyTorch libraries (~2GB).*
-
-3.  **Install Playwright Browsers**
-    ```bash
-    playwright install
-    ```
-4.  **Configuration**
+    *Note: If on Windows, run as Administrator once to allow Docling model downloads.*
+3.  **Configuration**:
     Copy `env.example` to `.env` and fill in your details:
     ```bash
     cp env.example .env
     ```
-    
-    Required variables:
-    *   `OPENAI_API_KEY`: Your OpenAI API key.
-    *   `QDRANT_URL`: URL of your Qdrant instance.
-    *   `QDRANT_API_KEY`: API Key for Qdrant.
+    Required: `OPENAI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`.
+
+### 2. Frontend Setup (Extension)
+1.  Open Chrome and navigate to `chrome://extensions`.
+2.  Enable **Developer Mode** (top right).
+3.  Click **Load unpacked**.
+4.  Select the `frontend/` folder from this repository.
 
 ## Usage
 
-### 1. Run the API Server
-Start the backend server which handles the agent logic:
-
+### 1. Start the Server
+Run the backend API:
 ```bash
 uvicorn autofill_agent.server:app --reload
 ```
+The server runs at `http://localhost:8000`.
 
-The API will be available at `http://localhost:8000`.
-
-### 2. Upload your CV
-Send a POST request to upload and index your CV. This will:
-1.  Convert the PDF to Markdown using Vision models.
-2.  Split the text by Headers (Experience, Education, etc.).
-3.  Index the chunks into Qdrant with your unique `user_id`.
-
-```bash
-# Example using curl
-curl -X POST -F "file=@/path/to/your/cv.pdf" http://localhost:8000/upload_cv
-```
-
-### 3. Fill a Form
-Trigger the agent to fill a form at a specific URL:
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"url": "https://jobs.example.com/apply"}' http://localhost:8000/fill_form
-```
-
-The agent will launch a browser (visible by default) and attempt to fill the form fields based on your CV data.
+### 2. Use the Extension
+1.  Navigate to a job application page.
+2.  Click the **Autofill Agent** extension icon.
+3.  **Upload CV**: Select your PDF resume and click Upload. This indexes your data.
+4.  **Start Autofill**: Click "Start".
+    *   The extension sends the page HTML to the backend.
+    *   The backend thinks and returns a list of actions.
+    *   The extension fills the form fields in real-time.
 
 ## Project Structure
 
 *   `autofill_agent/`
-    *   `agent.py`: Main agent logic (OpenAI + Playwright).
-    *   `server.py`: FastAPI application.
-    *   `retrieve_info_from_pdf.py`: RAG pipeline (Qdrant + OpenAI Embeddings) with multi-tenant filtering.
-    *   `load_and_process_pdf.py`: **New:** Docling-based PDF-to-Markdown converter.
-    *   `analyze_web_form.py`: HTML form parsing.
-    *   `interact_with_web_page.py`: Browser actions helper.
+    *   `server.py`: FastAPI entrypoint. Handles `/process_page` and `/upload_cv`.
+    *   `agent.py`: Core logic. Analyzes HTML and queries RAG to generate actions.
+    *   `retrieve_info_from_pdf.py`: Qdrant interactions (Search & Indexing).
+    *   `load_and_process_pdf.py`: Docling PDF converter.
+*   `frontend/`
+    *   `manifest.json`: Extension configuration.
+    *   `popup.js`: Extension UI logic.
+    *   `content_script.js`: DOM manipulation script (injected into web pages).
 
-## Qdrant Configuration
-The agent automatically creates a collection with a Payload Index for `user_id`, `Header 1`, and `Header 2`. This ensures:
-1.  **Security**: Users can only query their own data (via `user_id` filter).
-2.  **Precision**: The agent can search specifically within sections (e.g., "Find Python in 'Experience'").
+## Troubleshooting
+
+*   **"Cannot read page. Refresh?"**: Refresh the target webpage. The extension only works on pages loaded *after* it was installed.
+*   **Qdrant Errors**: Ensure your `.env` credentials are correct and your Qdrant instance is reachable.
+*   **Windows Errors**: If you see `WinError 1314`, run your terminal as Administrator for the first run.
