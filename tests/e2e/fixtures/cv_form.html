@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Application Form: Applied AI Engineer</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; color: #222; }
+    fieldset { border: 1px solid #ccc; border-radius: 6px; margin: 18px 0; padding: 12px 16px; }
+    legend { font-weight: 600; padding: 0 6px; }
+    .row { display: flex; flex-direction: column; margin: 8px 0; }
+    label { font-size: 14px; margin-bottom: 3px; }
+    input, select, textarea { font: inherit; padding: 6px; border: 1px solid #999; border-radius: 4px; }
+    textarea { min-height: 70px; }
+    .check { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+    .actions { display: flex; gap: 12px; margin-top: 20px; }
+    button { font: inherit; padding: 8px 16px; border-radius: 4px; border: 1px solid #555; background: #f4f4f4; cursor: pointer; }
+    button[type="submit"] { background: #1f5fbf; color: #fff; border-color: #1f5fbf; }
+  </style>
+</head>
+<body>
+  <h1>Application: Applied AI Engineer</h1>
+  <p>Please complete every section. Fields marked with * are required.</p>
+
+  <form id="cv-form" action="/submit" method="post">
+
+    <fieldset>
+      <legend>Personal details</legend>
+      <div class="row"><label for="full-name">Full name *</label><input id="full-name" name="full_name" required></div>
+      <div class="row"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
+      <div class="row"><label for="phone">Phone *</label><input id="phone" name="phone" type="tel" required></div>
+      <div class="row"><label for="location">Location</label><input id="location" name="location"></div>
+      <div class="row"><label for="linkedin">LinkedIn URL</label><input id="linkedin" name="linkedin"></div>
+      <div class="row"><label for="github">GitHub URL</label><input id="github" name="github"></div>
+      <div class="row"><label for="website">Website or portfolio</label><input id="website" name="website"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>About you</legend>
+      <div class="row"><label for="summary">About you</label><textarea id="summary" name="summary"></textarea></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Work authorization</legend>
+      <div class="row">
+        <label for="work-auth">Right to work in Germany</label>
+        <select id="work-auth" name="work_auth">
+          <option value="">Select an option</option>
+          <option value="Yes">Yes, I have the right to work</option>
+          <option value="No">No</option>
+          <option value="Needs sponsorship">I need sponsorship</option>
+        </select>
+      </div>
+      <div class="row">
+        <span>Will you now or in future require visa sponsorship?</span>
+        <div class="check"><input type="radio" id="sponsorship-yes" name="sponsorship" value="yes"><label for="sponsorship-yes">Yes</label></div>
+        <div class="check"><input type="radio" id="sponsorship-no" name="sponsorship" value="no"><label for="sponsorship-no">No</label></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Work experience</legend>
+
+      <h3>Job 1</h3>
+      <div class="row"><label for="job1-company">Job 1: company</label><input id="job1-company" name="job1_company"></div>
+      <div class="row"><label for="job1-title">Job 1: job title</label><input id="job1-title" name="job1_title"></div>
+      <div class="row"><label for="job1-start">Job 1: start date</label><input id="job1-start" name="job1_start"></div>
+      <div class="row"><label for="job1-end">Job 1: end date</label><input id="job1-end" name="job1_end"></div>
+      <div class="row"><label for="job1-achievements">Job 1: key achievements</label><textarea id="job1-achievements" name="job1_achievements"></textarea></div>
+
+      <h3>Job 2</h3>
+      <div class="row"><label for="job2-company">Job 2: company</label><input id="job2-company" name="job2_company"></div>
+      <div class="row"><label for="job2-title">Job 2: job title</label><input id="job2-title" name="job2_title"></div>
+      <div class="row"><label for="job2-start">Job 2: start date</label><input id="job2-start" name="job2_start"></div>
+      <div class="row"><label for="job2-end">Job 2: end date</label><input id="job2-end" name="job2_end"></div>
+      <div class="row"><label for="job2-achievements">Job 2: key achievements</label><textarea id="job2-achievements" name="job2_achievements"></textarea></div>
+
+      <h3>Job 3</h3>
+      <div class="row"><label for="job3-company">Job 3: company</label><input id="job3-company" name="job3_company"></div>
+      <div class="row"><label for="job3-title">Job 3: job title</label><input id="job3-title" name="job3_title"></div>
+      <div class="row"><label for="job3-start">Job 3: start date</label><input id="job3-start" name="job3_start"></div>
+      <div class="row"><label for="job3-end">Job 3: end date</label><input id="job3-end" name="job3_end"></div>
+      <div class="row"><label for="job3-achievements">Job 3: key achievements</label><textarea id="job3-achievements" name="job3_achievements"></textarea></div>
+
+      <h3>Job 4</h3>
+      <div class="row"><label for="job4-company">Job 4: company</label><input id="job4-company" name="job4_company"></div>
+      <div class="row"><label for="job4-title">Job 4: job title</label><input id="job4-title" name="job4_title"></div>
+      <div class="row"><label for="job4-start">Job 4: start date</label><input id="job4-start" name="job4_start"></div>
+      <div class="row"><label for="job4-end">Job 4: end date</label><input id="job4-end" name="job4_end"></div>
+      <div class="row"><label for="job4-achievements">Job 4: key achievements</label><textarea id="job4-achievements" name="job4_achievements"></textarea></div>
+
+      <h3>Job 5</h3>
+      <div class="row"><label for="job5-company">Job 5: company</label><input id="job5-company" name="job5_company"></div>
+      <div class="row"><label for="job5-title">Job 5: job title</label><input id="job5-title" name="job5_title"></div>
+      <div class="row"><label for="job5-start">Job 5: start date</label><input id="job5-start" name="job5_start"></div>
+      <div class="row"><label for="job5-end">Job 5: end date</label><input id="job5-end" name="job5_end"></div>
+      <div class="row"><label for="job5-achievements">Job 5: key achievements</label><textarea id="job5-achievements" name="job5_achievements"></textarea></div>
+
+      <h3>Job 6</h3>
+      <div class="row"><label for="job6-company">Job 6: company</label><input id="job6-company" name="job6_company"></div>
+      <div class="row"><label for="job6-title">Job 6: job title</label><input id="job6-title" name="job6_title"></div>
+      <div class="row"><label for="job6-start">Job 6: start date</label><input id="job6-start" name="job6_start"></div>
+      <div class="row"><label for="job6-end">Job 6: end date</label><input id="job6-end" name="job6_end"></div>
+      <div class="row"><label for="job6-achievements">Job 6: key achievements</label><textarea id="job6-achievements" name="job6_achievements"></textarea></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Education</legend>
+
+      <h3>Education 1</h3>
+      <div class="row"><label for="edu1-school">Education 1: school</label><input id="edu1-school" name="edu1_school"></div>
+      <div class="row"><label for="edu1-degree">Education 1: degree</label><input id="edu1-degree" name="edu1_degree"></div>
+      <div class="row"><label for="edu1-field">Education 1: field of study</label><input id="edu1-field" name="edu1_field"></div>
+      <div class="row"><label for="edu1-start">Education 1: start date</label><input id="edu1-start" name="edu1_start"></div>
+      <div class="row"><label for="edu1-end">Education 1: end date</label><input id="edu1-end" name="edu1_end"></div>
+      <div class="row"><label for="edu1-grade">Education 1: grade</label><input id="edu1-grade" name="edu1_grade"></div>
+
+      <h3>Education 2</h3>
+      <div class="row"><label for="edu2-school">Education 2: school</label><input id="edu2-school" name="edu2_school"></div>
+      <div class="row"><label for="edu2-degree">Education 2: degree</label><input id="edu2-degree" name="edu2_degree"></div>
+      <div class="row"><label for="edu2-field">Education 2: field of study</label><input id="edu2-field" name="edu2_field"></div>
+      <div class="row"><label for="edu2-start">Education 2: start date</label><input id="edu2-start" name="edu2_start"></div>
+      <div class="row"><label for="edu2-end">Education 2: end date</label><input id="edu2-end" name="edu2_end"></div>
+      <div class="row"><label for="edu2-grade">Education 2: grade</label><input id="edu2-grade" name="edu2_grade"></div>
+
+      <div class="row">
+        <label for="highest-education">Highest level of education</label>
+        <select id="highest-education" name="highest_education">
+          <option value="">Select an option</option>
+          <option value="High school">High school</option>
+          <option value="Bachelor's">Bachelor's</option>
+          <option value="Master's">Master's</option>
+          <option value="Doctorate">Doctorate (PhD)</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Skills, languages and certifications</legend>
+      <div class="row"><label for="skills">Skills (comma separated)</label><textarea id="skills" name="skills"></textarea></div>
+      <div class="row"><label for="languages">Languages</label><input id="languages" name="languages"></div>
+      <div class="row"><label for="certifications">Certifications</label><input id="certifications" name="certifications"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Projects</legend>
+
+      <h3>Project 1</h3>
+      <div class="row"><label for="proj1-name">Project 1: name</label><input id="proj1-name" name="proj1_name"></div>
+      <div class="row"><label for="proj1-link">Project 1: link</label><input id="proj1-link" name="proj1_link"></div>
+      <div class="row"><label for="proj1-description">Project 1: description</label><textarea id="proj1-description" name="proj1_description"></textarea></div>
+
+      <h3>Project 2</h3>
+      <div class="row"><label for="proj2-name">Project 2: name</label><input id="proj2-name" name="proj2_name"></div>
+      <div class="row"><label for="proj2-link">Project 2: link</label><input id="proj2-link" name="proj2_link"></div>
+      <div class="row"><label for="proj2-description">Project 2: description</label><textarea id="proj2-description" name="proj2_description"></textarea></div>
+
+      <h3>Project 3</h3>
+      <div class="row"><label for="proj3-name">Project 3: name</label><input id="proj3-name" name="proj3_name"></div>
+      <div class="row"><label for="proj3-link">Project 3: link</label><input id="proj3-link" name="proj3_link"></div>
+      <div class="row"><label for="proj3-description">Project 3: description</label><textarea id="proj3-description" name="proj3_description"></textarea></div>
+
+      <h3>Project 4</h3>
+      <div class="row"><label for="proj4-name">Project 4: name</label><input id="proj4-name" name="proj4_name"></div>
+      <div class="row"><label for="proj4-link">Project 4: link</label><input id="proj4-link" name="proj4_link"></div>
+      <div class="row"><label for="proj4-description">Project 4: description</label><textarea id="proj4-description" name="proj4_description"></textarea></div>
+
+      <h3>Project 5</h3>
+      <div class="row"><label for="proj5-name">Project 5: name</label><input id="proj5-name" name="proj5_name"></div>
+      <div class="row"><label for="proj5-link">Project 5: link</label><input id="proj5-link" name="proj5_link"></div>
+      <div class="row"><label for="proj5-description">Project 5: description</label><textarea id="proj5-description" name="proj5_description"></textarea></div>
+
+      <h3>Project 6</h3>
+      <div class="row"><label for="proj6-name">Project 6: name</label><input id="proj6-name" name="proj6_name"></div>
+      <div class="row"><label for="proj6-link">Project 6: link</label><input id="proj6-link" name="proj6_link"></div>
+      <div class="row"><label for="proj6-description">Project 6: description</label><textarea id="proj6-description" name="proj6_description"></textarea></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Preferences and consent</legend>
+      <div class="check"><input type="checkbox" id="relocate" name="relocate"><label for="relocate">I am willing to relocate</label></div>
+      <div class="check"><input type="checkbox" id="remote" name="remote"><label for="remote">I am open to remote work</label></div>
+      <div class="check"><input type="checkbox" id="consent" name="consent"><label for="consent">I agree to the privacy policy</label></div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" id="save-draft">Save draft</button>
+      <button type="submit" id="submit">Submit application</button>
+    </div>
+  </form>
+
+  <script>
+    // Deterministic test page: a submit is recorded, never sent anywhere.
+    window.submitted = false;
+    document.getElementById("cv-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      window.submitted = true;
+    });
+  </script>
+</body>
+</html>

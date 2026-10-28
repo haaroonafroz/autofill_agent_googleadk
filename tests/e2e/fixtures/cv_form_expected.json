@@ -1,0 +1,98 @@
+{
+  "_comment": "Expected answers for cv_form.html, derived from cv_profile.json. A field with ask=true is not in the CV: the correct behaviour is to leave it empty (or unchecked) or ask the candidate. Filling it with an invented value is counted as an invention.",
+  "fields": [
+    {"id": "full-name", "label": "Full name", "kind": "text", "expect": "Haaroon Afroz Ognawala"},
+    {"id": "email", "label": "Email", "kind": "text", "expect": "haaroon.afroz@gmail.com"},
+    {"id": "phone", "label": "Phone", "kind": "text", "ask": true},
+    {"id": "location", "label": "Location", "kind": "text", "ask": true},
+    {"id": "linkedin", "label": "LinkedIn URL", "kind": "text", "ask": true},
+    {"id": "github", "label": "GitHub URL", "kind": "text", "contains": ["github.com/haaroonafroz"]},
+    {"id": "website", "label": "Website or portfolio", "kind": "text", "ask": true},
+    {"id": "summary", "label": "About you", "kind": "textarea", "contains": ["Applied AI Engineer", "RAG"]},
+    {"id": "work-auth", "label": "Right to work in Germany", "kind": "select", "ask": true},
+    {"id": "sponsorship", "label": "Will you now or in future require visa sponsorship?", "kind": "radio", "name": "sponsorship", "ask": true},
+
+    {"id": "job1-company", "label": "Job 1: company", "kind": "text", "expect": "Bauhaus University, Weimar"},
+    {"id": "job1-title", "label": "Job 1: job title", "kind": "text", "expect": "Research Assistant (HiWi) - Deep Learning in Computer Vision"},
+    {"id": "job1-start", "label": "Job 1: start date", "kind": "text", "ask": true},
+    {"id": "job1-end", "label": "Job 1: end date", "kind": "text", "ask": true},
+    {"id": "job1-achievements", "label": "Job 1: key achievements", "kind": "textarea", "contains": ["Coordinate research progress", "ECCV 2026"]},
+
+    {"id": "job2-company", "label": "Job 2: company", "kind": "text", "expect": "Qdrant Solutions GmbH"},
+    {"id": "job2-title", "label": "Job 2: job title", "kind": "text", "expect": "AI Engineer - Working Student"},
+    {"id": "job2-start", "label": "Job 2: start date", "kind": "text", "expect": "07/2025"},
+    {"id": "job2-end", "label": "Job 2: end date", "kind": "text", "expect": "02/2026"},
+    {"id": "job2-achievements", "label": "Job 2: key achievements", "kind": "textarea", "contains": ["two-stage hybrid retrieval", "MCP"]},
+
+    {"id": "job3-company", "label": "Job 3: company", "kind": "text", "expect": "Bauhaus University Weimar"},
+    {"id": "job3-title", "label": "Job 3: job title", "kind": "text", "expect": "Research Assistant (HiWi) - Dataset Annotation & Analysis"},
+    {"id": "job3-start", "label": "Job 3: start date", "kind": "text", "expect": "05/2025"},
+    {"id": "job3-end", "label": "Job 3: end date", "kind": "text", "expect": "08/2025"},
+    {"id": "job3-achievements", "label": "Job 3: key achievements", "kind": "textarea", "contains": ["CVAT"]},
+
+    {"id": "job4-company", "label": "Job 4: company", "kind": "text", "expect": "Stealth AI Startup"},
+    {"id": "job4-title", "label": "Job 4: job title", "kind": "text", "expect": "Freelance AI Engineer"},
+    {"id": "job4-start", "label": "Job 4: start date", "kind": "text", "expect": "02/2025"},
+    {"id": "job4-end", "label": "Job 4: end date", "kind": "text", "expect": "05/2025"},
+    {"id": "job4-achievements", "label": "Job 4: key achievements", "kind": "textarea", "contains": ["tender matching system"]},
+
+    {"id": "job5-company", "label": "Job 5: company", "kind": "text", "expect": "The Developer Company"},
+    {"id": "job5-title", "label": "Job 5: job title", "kind": "text", "expect": "Machine Learning Engineer & Data Analyst - Intern"},
+    {"id": "job5-start", "label": "Job 5: start date", "kind": "text", "expect": "11/2022"},
+    {"id": "job5-end", "label": "Job 5: end date", "kind": "text", "expect": "03/2023"},
+    {"id": "job5-achievements", "label": "Job 5: key achievements", "kind": "textarea", "contains": ["30K"]},
+
+    {"id": "job6-company", "label": "Job 6: company", "kind": "text", "expect": "HEMS Corporation"},
+    {"id": "job6-title", "label": "Job 6: job title", "kind": "text", "expect": "Freelance Business Data Analyst"},
+    {"id": "job6-start", "label": "Job 6: start date", "kind": "text", "expect": "03/2022"},
+    {"id": "job6-end", "label": "Job 6: end date", "kind": "text", "expect": "10/2022"},
+    {"id": "job6-achievements", "label": "Job 6: key achievements", "kind": "textarea", "contains": ["historical sales"]},
+
+    {"id": "edu1-school", "label": "Education 1: school", "kind": "text", "expect": "Bauhaus University"},
+    {"id": "edu1-degree", "label": "Education 1: degree", "kind": "text", "expect": "M.Sc."},
+    {"id": "edu1-field", "label": "Education 1: field of study", "kind": "text", "expect": "Digital Engineering"},
+    {"id": "edu1-start", "label": "Education 1: start date", "kind": "text", "expect": "04/2023"},
+    {"id": "edu1-end", "label": "Education 1: end date", "kind": "text", "expect": "07/2026"},
+    {"id": "edu1-grade", "label": "Education 1: grade", "kind": "text", "ask": true},
+
+    {"id": "edu2-school", "label": "Education 2: school", "kind": "text", "expect": "NMIMS University, Mumbai"},
+    {"id": "edu2-degree", "label": "Education 2: degree", "kind": "text", "expect": "B.Tech."},
+    {"id": "edu2-field", "label": "Education 2: field of study", "kind": "text", "expect": "Mechanical Engineering"},
+    {"id": "edu2-start", "label": "Education 2: start date", "kind": "text", "expect": "07/2016"},
+    {"id": "edu2-end", "label": "Education 2: end date", "kind": "text", "expect": "08/2020"},
+    {"id": "edu2-grade", "label": "Education 2: grade", "kind": "text", "ask": true},
+
+    {"id": "highest-education", "label": "Highest level of education", "kind": "select", "expect": "Master's"},
+    {"id": "skills", "label": "Skills (comma separated)", "kind": "textarea", "contains": ["LangGraph", "Qdrant", "PyTorch", "Docker"]},
+    {"id": "languages", "label": "Languages", "kind": "text", "contains": ["English", "German", "Hindi"]},
+    {"id": "certifications", "label": "Certifications", "kind": "text", "ask": true},
+
+    {"id": "proj1-name", "label": "Project 1: name", "kind": "text", "expect": "Missions: Local Multi-Agent Coding Harness"},
+    {"id": "proj1-link", "label": "Project 1: link", "kind": "text", "ask": true},
+    {"id": "proj1-description", "label": "Project 1: description", "kind": "textarea", "contains": ["llama.cpp"]},
+
+    {"id": "proj2-name", "label": "Project 2: name", "kind": "text", "expect": "AI Agent-Swarm: Regulatory Compliance & Policy Adaptation"},
+    {"id": "proj2-link", "label": "Project 2: link", "kind": "text", "ask": true},
+    {"id": "proj2-description", "label": "Project 2: description", "kind": "textarea", "contains": ["GDPR"]},
+
+    {"id": "proj3-name", "label": "Project 3: name", "kind": "text", "expect": "Agentic RAG for Medical Decision Support"},
+    {"id": "proj3-link", "label": "Project 3: link", "kind": "text", "expect": "https://github.com/haaroonafroz/medical_copilot"},
+    {"id": "proj3-description", "label": "Project 3: description", "kind": "textarea", "contains": ["LangGraph"]},
+
+    {"id": "proj4-name", "label": "Project 4: name", "kind": "text", "expect": "LLM Adaptation: QLoRA Ablation Study for Medical QA"},
+    {"id": "proj4-link", "label": "Project 4: link", "kind": "text", "expect": "https://github.com/haaroonafroz/peft_finetuning"},
+    {"id": "proj4-description", "label": "Project 4: description", "kind": "textarea", "contains": ["QLoRA"]},
+
+    {"id": "proj5-name", "label": "Project 5: name", "kind": "text", "expect": "Real-Time Semantic Material Segmentation"},
+    {"id": "proj5-link", "label": "Project 5: link", "kind": "text", "expect": "https://github.com/haaroonafroz/DeeplabV3Plus_MaterialSegmentation"},
+    {"id": "proj5-description", "label": "Project 5: description", "kind": "textarea", "contains": ["DeepLabV3+"]},
+
+    {"id": "proj6-name", "label": "Project 6: name", "kind": "text", "expect": "End-to-End ML Platform: Car Price Prediction"},
+    {"id": "proj6-link", "label": "Project 6: link", "kind": "text", "expect": "https://github.com/haaroonafroz/CarPricePredictor"},
+    {"id": "proj6-description", "label": "Project 6: description", "kind": "textarea", "contains": ["MLflow"]},
+
+    {"id": "relocate", "label": "I am willing to relocate", "kind": "checkbox", "ask": true},
+    {"id": "remote", "label": "I am open to remote work", "kind": "checkbox", "ask": true},
+    {"id": "consent", "label": "I agree to the privacy policy", "kind": "checkbox", "ask": true}
+  ]
+}
