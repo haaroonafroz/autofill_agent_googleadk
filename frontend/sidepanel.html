@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autofill Agent</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header>
+    <h1>Autofill Agent</h1>
+    <span id="connection" class="pill pill-off">Offline</span>
+  </header>
+
+  <section>
+    <label for="userId">User ID</label>
+    <input id="userId" type="text" />
+    <p id="cvStatus" class="muted">Checking CV status...</p>
+  </section>
+
+  <section>
+    <h2>1. Your CV</h2>
+    <input id="cvFile" type="file" accept="application/pdf" />
+    <button id="uploadBtn">Upload CV</button>
+    <p id="uploadStatus" class="muted"></p>
+  </section>
+
+  <section>
+    <h2>2. Fill this page</h2>
+    <textarea id="goalInput" rows="3" spellcheck="false"></textarea>
+    <button id="startBtn">Start agent</button>
+    <button id="stopBtn" disabled>Stop</button>
+    <p id="agentStatus" class="muted">Open the application page, then press Start.</p>
+
+    <div id="askBox" class="ask" hidden>
+      <p id="askQuestion"></p>
+      <input id="askAnswer" type="text" placeholder="Your answer" />
+      <button id="askSend">Send answer</button>
+    </div>
+
+    <ol id="agentLog" class="feed"></ol>
+  </section>
+
+  <section>
+    <h2>3. Developer tools</h2>
+    <p class="muted">Used to test the bridge before the agent loop is connected.</p>
+    <button id="readBtn">Read page</button>
+    <textarea id="actionsInput" rows="6" spellcheck="false" placeholder='[{"type":"fill","ref":"e1","value":"Ada"}]'></textarea>
+    <button id="runBtn">Run actions</button>
+    <p id="devStatus" class="muted"></p>
+  </section>
+
+  <section>
+    <h2>Page elements</h2>
+    <p id="pageInfo" class="muted">Press "Read page" to see the fields on the current tab.</p>
+    <table id="elements">
+      <thead>
+        <tr><th>Ref</th><th>Type</th><th>Label</th><th>Value</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Log</h2>
+    <pre id="log"></pre>
+  </section>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
